@@ -38,11 +38,37 @@ const DEFAULT_ENTRIES: GuestbookEntry[] = [
   }
 ];
 
+const STORAGE_KEY = 'cinema_birthday_guestbook_v2';
+const LEGACY_STORAGE_KEY = 'cinema_birthday_guestbook';
+
+// Anciennes entrées de test à ne plus afficher (insensible à la casse)
+const REMOVED_NAMES = ['lucas', 'thomas', 'julie'];
+
+// Migration des anciennes données : on garde les vrais messages
+// (ex: Finaritra), on jette les anciens tests, et on garantit
+// l'affichage des 3 messages par défaut ci-dessus.
+const migrateLegacyEntries = (legacy: GuestbookEntry[]): GuestbookEntry[] => {
+  const kept = legacy.filter(
+    e => e && e.name && !REMOVED_NAMES.includes(e.name.trim().toLowerCase())
+  );
+  const defaultIds = new Set(DEFAULT_ENTRIES.map(d => d.id));
+  const userEntries = kept.filter(e => !defaultIds.has(e.id));
+  return [...userEntries, ...DEFAULT_ENTRIES];
+};
+
 export const WalkOfFameGuestbook: React.FC<WalkOfFameProps> = ({ star }) => {
   const [entries, setEntries] = useState<GuestbookEntry[]>(() => {
     try {
-      const saved = localStorage.getItem('cinema_birthday_guestbook');
+      const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) return JSON.parse(saved);
+      // Première visite depuis la mise à jour : migrer l'ancien stockage
+      const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+      if (legacy) {
+        const migrated = migrateLegacyEntries(JSON.parse(legacy));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+        localStorage.removeItem(LEGACY_STORAGE_KEY);
+        return migrated;
+      }
     } catch {
       // fallback
     }
@@ -67,7 +93,7 @@ export const WalkOfFameGuestbook: React.FC<WalkOfFameProps> = ({ star }) => {
 
   useEffect(() => {
     try {
-      localStorage.setItem('cinema_birthday_guestbook', JSON.stringify(entries));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
     } catch {
       // ignore
     }
