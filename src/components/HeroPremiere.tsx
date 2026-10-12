@@ -113,6 +113,7 @@ export const HeroPremiere: React.FC<HeroPremiereProps> = ({
             { label: 'Quiz Cinéma', id: 'quiz' },
             { label: 'Films & Backstage', id: 'films' },
             { label: 'Storyboard Photos', id: 'storyboard' },
+            { label: 'Galerie Photos', id: 'galerie' },
             { label: 'Walk of Fame', id: 'walkoffame' },
             { label: 'Générique de Fin', id: 'generique' },
           ].map(item => (

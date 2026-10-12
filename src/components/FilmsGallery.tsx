@@ -1,65 +1,30 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { BirthdayStar } from '../types/cinema';
 import { FILM_VIDEOS, FILM_CATEGORIES, FilmVideo } from '../config/media';
-import { Clapperboard, Play, Upload, Info, Calendar, Clock, X, Film } from 'lucide-react';
+import { Clapperboard, Play, Calendar, Clock } from 'lucide-react';
 import { cinemaAudio } from '../utils/audioEffects';
-
-/**
- * ═══════════════════════════════════════════════════════════
- *  🎬 GALERIE FILMS & BACKSTAGE — VIDÉOS DU RÉALISATEUR
- * ───────────────────────────────────────────────────────────
- *  POUR CHANGER LES VIDÉOS (dans VS Code) :
- *  → Ouvre le fichier  src/config/media.ts
- *  → Modifie la section  FILM_VIDEOS
- *  → Vidéos MP4 : mets-les dans  public/videos/
- *  → YouTube : mets l'ID vidéo + type: "youtube"
- * ═══════════════════════════════════════════════════════════
- */
 
 interface FilmsGalleryProps {
   star: BirthdayStar;
 }
 
-type Filter = 'all' | 'film' | 'backstage' | 'betisier';
+type Filter = 'all' | 'film' | 'backstage' | 'mahalatsaka';
+
+const CATEGORY_KEYS: Array<'film' | 'backstage' | 'mahalatsaka'> = ['film', 'backstage', 'mahalatsaka'];
 
 export const FilmsGallery: React.FC<FilmsGalleryProps> = ({ star }) => {
   const [filter, setFilter] = useState<Filter>('all');
   const [selected, setSelected] = useState<FilmVideo>(FILM_VIDEOS[0]);
-  const [showHelp, setShowHelp] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [previewName, setPreviewName] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filtered = filter === 'all' ? FILM_VIDEOS : FILM_VIDEOS.filter(v => v.category === filter);
 
   const handleSelect = (video: FilmVideo) => {
     cinemaAudio.playClapSound();
     setSelected(video);
-    setPreviewUrl(null);
-    setPreviewName('');
-  };
-
-  // Aperçu instantané d'une vidéo depuis le PC (sans passer par VS Code)
-  const handleLocalFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
-    setPreviewName(file.name);
-    cinemaAudio.playSuccessSound();
   };
 
   const renderPlayer = () => {
-    // 1. Aperçu d'un fichier local choisi par l'utilisateur
-    if (previewUrl) {
-      return (
-        <video key={previewUrl} controls playsInline className="w-full aspect-video bg-black" poster={selected.poster}>
-          <source src={previewUrl} type="video/mp4" />
-          Votre navigateur ne peut pas lire cette vidéo.
-        </video>
-      );
-    }
-    // 2. Vidéo YouTube intégrée
+    // Vidéo YouTube intégrée
     if (selected.type === 'youtube') {
       return (
         <iframe
@@ -72,7 +37,7 @@ export const FilmsGallery: React.FC<FilmsGalleryProps> = ({ star }) => {
         />
       );
     }
-    // 3. Fichier MP4 classique
+    // Fichier MP4 classique
     return (
       <video key={selected.id} controls playsInline preload="metadata" className="w-full aspect-video bg-black" poster={selected.poster}>
         <source src={selected.src} type="video/mp4" />
@@ -96,31 +61,6 @@ export const FilmsGallery: React.FC<FilmsGalleryProps> = ({ star }) => {
             La filmographie officielle de {star.name} : ses courts-métrages, les coulisses et le bêtisier !
           </p>
         </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="px-4 py-2 bg-yellow-500/15 hover:bg-yellow-500/30 text-yellow-300 border border-yellow-500/40 text-xs font-bold rounded-xl flex items-center gap-2 transition-all cursor-pointer"
-            title="Regarder immédiatement une vidéo de ton PC (aperçu temporaire)"
-          >
-            <Upload className="w-4 h-4" />
-            Tester ma vidéo
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="video/*"
-            className="hidden"
-            onChange={handleLocalFile}
-          />
-          <button
-            onClick={() => setShowHelp(true)}
-            className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-gray-300 border border-zinc-700 transition-colors cursor-pointer"
-            title="Comment changer les vidéos dans VS Code ?"
-          >
-            <Info className="w-4 h-4 text-yellow-400" />
-          </button>
-        </div>
       </div>
 
       {/* Filtres par catégorie */}
@@ -135,7 +75,7 @@ export const FilmsGallery: React.FC<FilmsGalleryProps> = ({ star }) => {
         >
           Tout voir ({FILM_VIDEOS.length})
         </button>
-        {(Object.keys(FILM_CATEGORIES) as Array<'film' | 'backstage' | 'betisier'>).map(cat => {
+        {CATEGORY_KEYS.map(cat => {
           const count = FILM_VIDEOS.filter(v => v.category === cat).length;
           return (
             <button
@@ -175,12 +115,10 @@ export const FilmsGallery: React.FC<FilmsGalleryProps> = ({ star }) => {
               </span>
             </div>
             <h3 className="text-xl sm:text-2xl font-black font-cinzel text-white tracking-wide">
-              {previewName ? `Aperçu : ${previewName}` : selected.title.toUpperCase()}
+              {selected.title.toUpperCase()}
             </h3>
             <p className="text-xs text-gray-300 mt-2 leading-relaxed">
-              {previewName
-                ? "Tu regardes un aperçu temporaire depuis ton PC. Pour l'ajouter définitivement, copie le fichier dans public/videos/ puis déclare-le dans src/config/media.ts."
-                : selected.description}
+              {selected.description}
             </p>
             <p className="text-[11px] text-gray-500 mt-3 font-mono">
               Réalisé par {star.name} • Une production {star.name.toUpperCase()} STUDIOS
@@ -191,7 +129,7 @@ export const FilmsGallery: React.FC<FilmsGalleryProps> = ({ star }) => {
         {/* ── PLAYLIST / MINIATURES ───────────────── */}
         <div className="lg:col-span-2 space-y-3 max-h-[540px] overflow-y-auto pr-1">
           {filtered.map(video => {
-            const isActive = selected.id === video.id && !previewUrl;
+            const isActive = selected.id === video.id;
             return (
               <button
                 key={video.id}
@@ -207,7 +145,7 @@ export const FilmsGallery: React.FC<FilmsGalleryProps> = ({ star }) => {
                     src={video.poster}
                     alt={video.title}
                     loading="lazy"
-                    className="w-full h-32 sm:h-36 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-32 sm:h-36 object-cover object-top group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                   {/* Bouton play */}
@@ -244,53 +182,6 @@ export const FilmsGallery: React.FC<FilmsGalleryProps> = ({ star }) => {
           )}
         </div>
       </div>
-
-      {/* Astuce VS Code */}
-      <div className="mt-6 text-center text-[11px] text-gray-500 font-mono">
-        💡 Pour mettre les vrais films de {star.name} : ouvre <span className="text-yellow-400">src/config/media.ts</span> → section <span className="text-yellow-400">FILM_VIDEOS</span> (MP4 dans <span className="text-yellow-400">public/videos/</span> ou lien YouTube)
-      </div>
-
-      {/* Modale d'aide */}
-      {showHelp && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="cinema-card rounded-2xl max-w-lg w-full p-6 border border-yellow-500/40 max-h-[85vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-lg font-cinzel font-bold text-yellow-400 flex items-center gap-2">
-                <Film className="w-5 h-5" />
-                Comment ajouter mes vidéos ?
-              </h3>
-              <button
-                onClick={() => setShowHelp(false)}
-                className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-gray-300 cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="text-xs text-gray-300 space-y-3 leading-relaxed">
-              <p><b className="text-yellow-300">Méthode 1 — Fichier vidéo (recommandée) :</b></p>
-              <ol className="list-decimal ml-5 space-y-1 text-gray-400">
-                <li>Copie ta vidéo dans le dossier <span className="text-yellow-400 font-mono">public/videos/</span> (crée-le s'il n'existe pas).</li>
-                <li>Ouvre <span className="text-yellow-400 font-mono">src/config/media.ts</span> dans VS Code.</li>
-                <li>Dans <span className="text-yellow-400 font-mono">FILM_VIDEOS</span>, change le <span className="text-yellow-400 font-mono">src</span> : <span className="text-yellow-400 font-mono">"/videos/ma-video.mp4"</span> avec <span className="text-yellow-400 font-mono">type: "mp4"</span>.</li>
-                <li>Change aussi le titre, l'année et la description. C'est tout !</li>
-              </ol>
-              <p><b className="text-yellow-300">Méthode 2 — YouTube :</b></p>
-              <ol className="list-decimal ml-5 space-y-1 text-gray-400">
-                <li>Mets ta vidéo en ligne (non répertoriée suffit).</li>
-                <li>Copie l'ID : tout ce qui suit <span className="text-yellow-400 font-mono">watch?v=</span> dans l'adresse.</li>
-                <li>Dans <span className="text-yellow-400 font-mono">FILM_VIDEOS</span>, mets cet ID dans <span className="text-yellow-400 font-mono">src</span> avec <span className="text-yellow-400 font-mono">type: "youtube"</span>.</li>
-              </ol>
-              <p><b className="text-yellow-300">Astuce express :</b> le bouton <span className="text-yellow-400">"Tester ma vidéo"</span> permet de regarder immédiatement une vidéo de ton PC sans toucher au code (aperçu temporaire).</p>
-            </div>
-            <button
-              onClick={() => setShowHelp(false)}
-              className="mt-4 w-full py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-xs rounded-lg transition-colors cursor-pointer"
-            >
-              Compris !
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

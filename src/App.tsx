@@ -11,6 +11,7 @@ import { FilmsGallery } from './components/FilmsGallery';
 import { MoviePitchGenerator } from './components/MoviePitchGenerator';
 import { Soundboard } from './components/Soundboard';
 import { LifeStoryboard } from './components/LifeStoryboard';
+import { PhotoGallery } from './components/PhotoGallery';
 import { WalkOfFameGuestbook } from './components/WalkOfFameGuestbook';
 import { EndCredits } from './components/EndCredits';
 import { StarCustomizerModal } from './components/StarCustomizerModal';
@@ -125,6 +126,11 @@ export const App: React.FC = () => {
         {/* STORYBOARD PHOTOS DE SA VIE */}
         <section id="storyboard" className="scroll-mt-24">
           <LifeStoryboard star={star} />
+        </section>
+
+        {/* GALERIE PHOTOS SOUVENIRS */}
+        <section id="galerie" className="scroll-mt-24">
+          <PhotoGallery star={star} />
         </section>
 
         {/* WALK OF FAME / LIVRE D'OR */}
