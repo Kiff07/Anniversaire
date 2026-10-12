@@ -132,11 +132,6 @@ export const StarSpotlight: React.FC<StarSpotlightProps> = ({ star, onOpenCustom
         </button>
       </div>
 
-      {/* Astuce VS Code */}
-      <div className="mt-6 text-center text-[11px] text-gray-500 font-mono">
-        💡 Astuce : pour mettre les vraies photos de {star.name}, ouvre <span className="text-yellow-400">src/config/media.ts</span> dans VS Code → section <span className="text-yellow-400">STAR_PHOTOS</span>
-      </div>
-
       {/* Lightbox plein écran */}
       {lightboxIdx !== null && STAR_PHOTOS[lightboxIdx] && (
         <div

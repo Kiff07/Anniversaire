@@ -29,16 +29,16 @@ export const StarCustomizerModal: React.FC<StarCustomizerModalProps> = ({ star, 
 
   const handleReset = () => {
     setFormData({
-      name: 'Alexandre',
-      age: 30,
-      nickname: 'Alex la Star',
-      birthDate: '1995',
-      partyDate: 'Samedi Soir • 20h00',
-      partyLocation: 'Studio 54 • Paris',
-      favoriteGenre: 'Comédie & Blockbuster',
-      movieTitle: 'Alexandre : Le Blockbuster des 30 Ans',
-      directorSubtitle: 'Une Réalisation de Tous ses Meilleurs Amis',
-      tagline: '30 ans de charisme, 0 cascadeur et 100% de rigolade.',
+      name: 'Avotra',
+      age: 26,
+      nickname: 'Avotra la Légende',
+      birthDate: '2000',
+      partyDate: 'Mercredi 14 Octobre • 00h00',
+      partyLocation: 'Le Studio 7 • Grand Tapis Rouge',
+      favoriteGenre: 'Comédie, Action & Blockbuster',
+      movieTitle: 'Avotra : Le Blockbuster des 26 Ans',
+      directorSubtitle: 'Réalisé par Tous ses Meilleurs Complices',
+      tagline: '26 ans de charisme, zéro cascadeur et 100% de fous rires garantis.',
       bio: STAR_DEFAULT_BIO
     });
   };

@@ -52,7 +52,7 @@ Ouvre-le dans VS Code, tout est commenté en français. 👍
 ### Catégories possibles
 - `"film"` → Films réalisés par lui
 - `"backstage"` → Behind The Scenes / coulisses
-- `"betisier"` → Bêtisier / fous rires
+- `"mahalatsaka"` → Bêtisier / fous rires
 
 > Astuce : sur le site, le bouton **« Tester ma vidéo »** permet de regarder
 > immédiatement une vidéo de ton PC sans toucher au code (aperçu temporaire).

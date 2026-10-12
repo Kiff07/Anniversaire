@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BirthdayStar } from '../types/cinema';
-import { Film, Sliders, Volume2, VolumeX, Sparkles, Trophy, HelpCircle, Zap, Star, Menu, X } from 'lucide-react';
+import { Film, Sliders, Volume2, VolumeX, Sparkles, Trophy, HelpCircle, Zap, Star, Menu, X, Images } from 'lucide-react';
 import { cinemaAudio } from '../utils/audioEffects';
 
 interface CinemaNavbarProps {
@@ -33,6 +33,7 @@ export const CinemaNavbar: React.FC<CinemaNavbarProps> = ({
     { label: 'Quiz Cinéma', href: '#quiz', icon: HelpCircle },
     { label: 'Films & Backstage', href: '#films', icon: Trophy },
     { label: 'Storyboard', href: '#storyboard', icon: Film },
+    { label: 'Galerie Photos', href: '#galerie', icon: Images },
     { label: 'Walk of Fame', href: '#walkoffame', icon: Star },
   ];
 

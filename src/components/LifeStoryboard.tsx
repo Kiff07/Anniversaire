@@ -218,11 +218,6 @@ export const LifeStoryboard: React.FC<LifeStoryboardProps> = ({ star }) => {
         ))}
       </div>
 
-      {/* Astuce VS Code */}
-      <div className="mt-6 text-center text-[11px] text-gray-500 font-mono">
-        💡 Pour mettre les vraies photos de {star.name} : ouvre <span className="text-yellow-400">src/config/media.ts</span> → section <span className="text-yellow-400">STORYBOARD_IMAGES</span> (images dans <span className="text-yellow-400">public/images/</span>)
-      </div>
-
       {/* Lightbox photo agrandie */}
       {lightbox && (
         <div
